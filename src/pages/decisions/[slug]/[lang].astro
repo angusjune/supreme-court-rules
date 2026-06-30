@@ -1,0 +1,30 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import DecisionArticle from '../../../components/DecisionArticle.astro';
+import { decisionsBySlug, availableLangs } from '../../../lib/decisions';
+import type { Lang } from '../../../i18n/ui';
+
+export async function getStaticPaths() {
+  const bySlug = await decisionsBySlug();
+  return [...bySlug.entries()].flatMap(([slug, entries]) =>
+    entries
+      .filter((e) => e.data.lang !== 'en')
+      .map((e) => ({
+        params: { slug, lang: e.data.lang },
+        props: { entry: e, available: availableLangs(entries) },
+      })),
+  );
+}
+
+const { entry, available } = Astro.props;
+const lang = entry.data.lang as Lang;
+---
+
+<BaseLayout
+  activeTab="decisions"
+  lang={lang}
+  title={entry.data.caseName}
+  description={entry.data.holding}
+>
+  <DecisionArticle entry={entry} available={available} />
+</BaseLayout>

@@ -1,0 +1,26 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import JusticeCard from '../../components/JusticeCard.astro';
+import { getCollection } from 'astro:content';
+import { DEFAULT_LANG, t } from '../../i18n/ui';
+
+const lang = DEFAULT_LANG;
+const s = t(lang);
+const subtitle = 'The nine justices of the United States Supreme Court.';
+
+const justices = (await getCollection('justices')).sort(
+  (a, b) =>
+    a.data.order - b.data.order || a.data.confirmedYear - b.data.confirmedYear,
+);
+---
+
+<BaseLayout activeTab="justices" lang={lang} title={s.navJustices} wide description={subtitle}>
+  <section class="pt-8">
+    <h1 class="text-2xl font-bold tracking-tight text-ink">{s.navJustices}</h1>
+    <p class="mt-1 text-sm text-muted">{subtitle}</p>
+  </section>
+
+  <section class="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+    {justices.map((justice) => <JusticeCard justice={justice} />)}
+  </section>
+</BaseLayout>

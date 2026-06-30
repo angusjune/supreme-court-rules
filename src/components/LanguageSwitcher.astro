@@ -1,0 +1,39 @@
+---
+import { LANG_NAMES, type Lang } from '../i18n/ui';
+
+interface Props {
+  slug: string;
+  current: Lang;
+  available: Lang[];
+  label: string;
+}
+const { slug, current, available, label } = Astro.props;
+
+function href(lang: Lang): string {
+  return lang === 'en' ? `/decisions/${slug}` : `/decisions/${slug}/${lang}`;
+}
+---
+
+<div class="flex flex-wrap items-center gap-2">
+  <span class="text-[0.65rem] font-medium uppercase tracking-wide text-faint">
+    {label}
+  </span>
+  <div class="flex flex-wrap gap-1">
+    {
+      available.map((lang) =>
+        lang === current ? (
+          <span class="rounded-md bg-ink px-2 py-1 text-xs font-medium text-white">
+            {LANG_NAMES[lang]}
+          </span>
+        ) : (
+          <a
+            href={href(lang)}
+            class="rounded-md border border-line px-2 py-1 text-xs font-medium text-muted hover:border-ink hover:text-ink"
+          >
+            {LANG_NAMES[lang]}
+          </a>
+        ),
+      )
+    }
+  </div>
+</div>

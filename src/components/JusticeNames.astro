@@ -1,0 +1,40 @@
+---
+import { t, type Lang } from '../i18n/ui';
+import type { Lean } from '../lib/decisions';
+
+interface Props {
+  items: { name: string; lean: Lean | null }[];
+  lang: Lang;
+}
+const { items, lang } = Astro.props;
+const s = t(lang);
+
+const dotColor: Record<Lean, string> = {
+  conservative: 'bg-conservative',
+  liberal: 'bg-liberal',
+  center: 'bg-centrist',
+};
+const leanName: Record<Lean, string> = {
+  conservative: s.leanConservative,
+  liberal: s.leanLiberal,
+  center: s.leanCenter,
+};
+---
+
+<span class="inline-flex flex-wrap items-center gap-x-3 gap-y-1">
+  {
+    items.map((it) => (
+      <span class="inline-flex items-center gap-1.5">
+        {it.lean ? (
+          <span
+            class={`inline-block h-2 w-2 shrink-0 rounded-full ${dotColor[it.lean]}`}
+            role="img"
+            aria-label={leanName[it.lean]}
+            title={leanName[it.lean]}
+          />
+        ) : null}
+        <span class="text-ink">{it.name}</span>
+      </span>
+    ))
+  }
+</span>

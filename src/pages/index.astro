@@ -1,0 +1,57 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import HeroDecision from '../components/HeroDecision.astro';
+import DecisionListItem from '../components/DecisionListItem.astro';
+import EmptyState from '../components/EmptyState.astro';
+import { DEFAULT_LANG, t } from '../i18n/ui';
+import { decisionFeed, decisionsOn, formatDate } from '../lib/decisions';
+
+const lang = DEFAULT_LANG;
+const s = t(lang);
+
+const feed = await decisionFeed(); // one en entry per decision, newest first
+const today = new Date(); // build date == "today" for this static build
+const todayLabel = formatDate(today, lang);
+const todays = decisionsOn(feed, today);
+const todaysSlugs = new Set(todays.map((e) => e.data.slug));
+const past = feed.filter((e) => !todaysSlugs.has(e.data.slug));
+---
+
+<BaseLayout activeTab="decisions" lang={lang} description={s.tagline}>
+  <section class="pt-8">
+    <p class="text-sm font-medium text-muted">{s.tagline}</p>
+  </section>
+
+  <section class="mt-6">
+    {
+      todays.length > 0 ? (
+        <div class="flex flex-col gap-6">
+          {todays.map((entry) => (
+            <HeroDecision entry={entry} lang={lang} />
+          ))}
+        </div>
+      ) : (
+        <EmptyState
+          title={s.noDecisionsToday}
+          blurb={s.noDecisionsBlurb}
+          date={todayLabel}
+        />
+      )
+    }
+  </section>
+
+  {
+    past.length > 0 ? (
+      <section class="mt-12">
+        <h2 class="mb-4 text-sm font-semibold uppercase tracking-wide text-faint">
+          {s.recentDecisions}
+        </h2>
+        <div class="flex flex-col gap-3">
+          {past.map((entry) => (
+            <DecisionListItem entry={entry} lang={lang} />
+          ))}
+        </div>
+      </section>
+    ) : null
+  }
+</BaseLayout>

@@ -1,0 +1,20 @@
+---
+interface Props {
+  vote: string;
+  label?: string;
+}
+const { vote, label } = Astro.props;
+---
+
+<span
+  class="inline-flex items-baseline gap-1.5 rounded-md border border-line bg-surface px-2 py-1"
+>
+  {
+    label ? (
+      <span class="text-[0.65rem] font-medium uppercase tracking-wide text-faint">
+        {label}
+      </span>
+    ) : null
+  }
+  <span class="font-semibold tabular-nums text-ink">{vote}</span>
+</span>

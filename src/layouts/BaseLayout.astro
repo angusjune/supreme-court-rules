@@ -1,0 +1,53 @@
+---
+import '../styles/global.css';
+import Nav from '../components/Nav.astro';
+import { DEFAULT_LANG, t, type Lang } from '../i18n/ui';
+
+interface Props {
+  title?: string;
+  description?: string;
+  lang?: Lang;
+  activeTab?: 'decisions' | 'justices';
+  wide?: boolean;
+}
+
+const {
+  title,
+  description,
+  lang = DEFAULT_LANG,
+  activeTab,
+  wide = false,
+} = Astro.props;
+
+const s = t(lang);
+const pageTitle = title ? `${title} · ${s.siteTitle}` : s.siteTitle;
+const mainWidth = wide ? 'max-w-5xl' : 'max-w-3xl';
+const favicon =
+  "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚖️</text></svg>";
+---
+
+<!doctype html>
+<html lang={lang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" href={favicon} />
+    <title>{pageTitle}</title>
+    {description ? <meta name="description" content={description} /> : null}
+  </head>
+  <body class="min-h-screen bg-white">
+    <Nav lang={lang} activeTab={activeTab} />
+    <main class={`mx-auto w-full ${mainWidth} px-5 pb-24`}>
+      <slot />
+    </main>
+    <footer class="border-t border-line">
+      <div class="mx-auto w-full max-w-5xl px-5 py-8 text-xs text-faint">
+        <p>{s.siteTitle} — {s.tagline}</p>
+        <p class="mt-1">
+          Editorial commentary reflects the author's opinion, not legal advice.
+          Facts link to primary sources. Built with Astro.
+        </p>
+      </div>
+    </footer>
+  </body>
+</html>

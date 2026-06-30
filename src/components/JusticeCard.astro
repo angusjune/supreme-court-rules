@@ -1,0 +1,29 @@
+---
+import LeanBadge from './LeanBadge.astro';
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  justice: CollectionEntry<'justices'>;
+}
+const { justice } = Astro.props;
+const j = justice.data;
+---
+
+<a
+  href={`/justices/${justice.id}`}
+  class="group flex flex-col items-center rounded-2xl border border-line bg-white p-5 text-center transition hover:border-ink/30 hover:shadow-sm"
+>
+  <img
+    src={j.photo}
+    alt={j.name}
+    loading="lazy"
+    width="96"
+    height="120"
+    class="h-28 w-24 rounded-lg bg-surface object-cover object-top"
+  />
+  <h3 class="mt-3 font-semibold text-ink group-hover:text-accent">{j.name}</h3>
+  <p class="text-xs text-muted">{j.role}</p>
+  <div class="mt-2">
+    <LeanBadge lean={j.lean} />
+  </div>
+</a>

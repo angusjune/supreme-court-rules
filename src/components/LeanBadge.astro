@@ -1,0 +1,20 @@
+---
+import { leanLabel } from '../i18n/ui';
+
+interface Props {
+  lean: 'conservative' | 'liberal' | 'center';
+}
+const { lean } = Astro.props;
+
+const styles: Record<Props['lean'], string> = {
+  conservative: 'text-conservative bg-conservative-soft',
+  liberal: 'text-liberal bg-liberal-soft',
+  center: 'text-centrist bg-centrist-soft',
+};
+---
+
+<span
+  class={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${styles[lean]}`}
+>
+  {leanLabel[lean]}
+</span>

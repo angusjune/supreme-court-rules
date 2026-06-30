@@ -1,0 +1,46 @@
+---
+import { DEFAULT_LANG, t, type Lang } from '../i18n/ui';
+
+interface Props {
+  lang?: Lang;
+  activeTab?: 'decisions' | 'justices';
+}
+
+const { lang = DEFAULT_LANG, activeTab } = Astro.props;
+const s = t(lang);
+const path = Astro.url.pathname;
+
+const isDecisions =
+  activeTab === 'decisions' ||
+  (!activeTab && (path === '/' || path.startsWith('/decisions')));
+const isJustices =
+  activeTab === 'justices' || (!activeTab && path.startsWith('/justices'));
+
+function tabClass(active: boolean): string {
+  const base =
+    'px-3 py-2.5 text-sm font-medium border-b-2 transition-colors';
+  return active
+    ? `${base} border-accent text-ink`
+    : `${base} border-transparent text-faint hover:text-ink`;
+}
+---
+
+<header
+  class="sticky top-0 z-10 border-b border-line bg-white/85 backdrop-blur"
+>
+  <div class="mx-auto w-full max-w-5xl px-5">
+    <div class="flex items-center justify-between py-3">
+      <a
+        href="/"
+        class="flex items-center gap-2 font-semibold tracking-tight text-ink"
+      >
+        <span aria-hidden="true">⚖️</span>
+        <span>{s.siteTitle}</span>
+      </a>
+    </div>
+    <nav class="-mb-px flex gap-1">
+      <a href="/" class={tabClass(isDecisions)}>{s.navDecisions}</a>
+      <a href="/justices" class={tabClass(isJustices)}>{s.navJustices}</a>
+    </nav>
+  </div>
+</header>

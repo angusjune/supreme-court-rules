@@ -31,6 +31,12 @@ src/data/decisions/trump-v-casa/
   localize it, `winner`, `loser`, `holding`, `courtOpinionSummary`, `topics`, source
   `label`s) and the **MDX body** are written natively in each language — translate, don't
   transliterate.
+- ⚠️ **Justice names stay in ENGLISH in every language file.** The fields `majorityAuthor`,
+  `joinedBy`, `concurrences`, and `dissentBy` must use the English name (e.g.
+  `Justice Brett Kavanaugh`) in `fr`/`ja`/`zh` too — do NOT translate them. The
+  political-lean colored dots match English surnames; a localized name (e.g.
+  `布雷特·卡瓦诺大法官`) won't match and its dot disappears. (As a safety net, the detail page
+  sources these names from the English entry, but keep the data clean.)
 
 ### Frontmatter schema (decisions)
 

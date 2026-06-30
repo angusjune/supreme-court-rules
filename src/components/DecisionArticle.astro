@@ -1,5 +1,5 @@
 ---
-import { getCollection, render } from 'astro:content';
+import { getCollection, getEntry, render } from 'astro:content';
 import VoteBadge from './VoteBadge.astro';
 import SourceLinks from './SourceLinks.astro';
 import LanguageSwitcher from './LanguageSwitcher.astro';
@@ -27,6 +27,16 @@ const { Content } = await render(entry);
 const metaParts = [formatDate(d.date, lang)];
 if (d.term) metaParts.push(`${s.term} ${d.term}`);
 if (d.docket) metaParts.push(`${s.docket} ${d.docket}`);
+
+// Justice names ALWAYS come from the English entry, even on translated pages: the
+// lean-dot resolver matches English surnames, so a localized name (e.g. "罗伯茨首席大法官")
+// would silently swallow its colored dot. Sourcing the names from the canonical English
+// sibling keeps the names — and the dots — consistent regardless of translation.
+const enId = entry.id.replace(/\/[^/]+$/, '/en');
+const enData =
+  entry.data.lang === 'en'
+    ? d
+    : ((await getEntry('decisions', enId))?.data ?? d);
 
 // Prefix each named justice with a dot colored by political lean.
 const leanOf = makeLeanResolver(await getCollection('justices'));
@@ -134,34 +144,34 @@ const toItems = (names: string[]) =>
     <dl class="mt-4 flex flex-col gap-2 text-sm">
       <div class="flex gap-2">
         <dt class="w-28 shrink-0 pt-0.5 text-faint">{s.majority}</dt>
-        <dd><JusticeNames items={toItems([d.majorityAuthor])} lang={lang} /></dd>
+        <dd><JusticeNames items={toItems([enData.majorityAuthor])} lang={lang} /></dd>
       </div>
       {
-        d.joinedBy.length > 0 ? (
+        enData.joinedBy.length > 0 ? (
           <div class="flex gap-2">
             <dt class="w-28 shrink-0 pt-0.5 text-faint">{s.joinedBy}</dt>
             <dd>
-              <JusticeNames items={toItems(d.joinedBy)} lang={lang} />
+              <JusticeNames items={toItems(enData.joinedBy)} lang={lang} />
             </dd>
           </div>
         ) : null
       }
       {
-        d.concurrences.length > 0 ? (
+        enData.concurrences.length > 0 ? (
           <div class="flex gap-2">
             <dt class="w-28 shrink-0 pt-0.5 text-faint">{s.concurrence}</dt>
             <dd>
-              <JusticeNames items={toItems(d.concurrences)} lang={lang} />
+              <JusticeNames items={toItems(enData.concurrences)} lang={lang} />
             </dd>
           </div>
         ) : null
       }
       {
-        d.dissentBy.length > 0 ? (
+        enData.dissentBy.length > 0 ? (
           <div class="flex gap-2">
             <dt class="w-28 shrink-0 pt-0.5 text-faint">{s.dissent}</dt>
             <dd>
-              <JusticeNames items={toItems(d.dissentBy)} lang={lang} />
+              <JusticeNames items={toItems(enData.dissentBy)} lang={lang} />
             </dd>
           </div>
         ) : null

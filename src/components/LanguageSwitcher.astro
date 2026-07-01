@@ -28,6 +28,7 @@ function href(lang: Lang): string {
         ) : (
           <a
             href={href(lang)}
+            data-lang-choice={lang}
             class="rounded-md border border-line px-2 py-1 text-xs font-medium text-muted hover:border-ink hover:text-ink"
           >
             {LANG_NAMES[lang]}

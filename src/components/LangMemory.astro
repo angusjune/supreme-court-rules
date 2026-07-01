@@ -1,0 +1,46 @@
+---
+/**
+ * Remembers the reader's language choice across decisions via localStorage.
+ *
+ * Every in-site link to a decision points at the canonical English URL, so the
+ * only way to reach a localized page is the LanguageSwitcher. We therefore:
+ *   - persist the chosen language on any switcher click (incl. English), and
+ *   - on a canonical English page, redirect to the remembered language when that
+ *     language exists for this decision.
+ * Runs inline in <head> so the redirect fires before the English body paints;
+ * `location.replace` keeps the bounced English URL out of history.
+ */
+import type { Lang } from '../i18n/ui';
+
+interface Props {
+  slug: string;
+  current: Lang;
+  available: Lang[];
+}
+const { slug, current, available } = Astro.props;
+---
+
+<script is:inline define:vars={{ slug, current, available }}>
+  (function () {
+    var KEY = 'preferredLang';
+    try {
+      var pref = localStorage.getItem(KEY);
+      if (current === 'en' && pref && pref !== 'en' && available.indexOf(pref) !== -1) {
+        location.replace('/decisions/' + slug + '/' + pref);
+        return;
+      }
+    } catch (e) {
+      /* localStorage unavailable (private mode, etc.) — fall through. */
+    }
+    document.addEventListener('click', function (evt) {
+      var target = evt.target;
+      var el = target && target.closest ? target.closest('[data-lang-choice]') : null;
+      if (!el) return;
+      try {
+        localStorage.setItem(KEY, el.getAttribute('data-lang-choice'));
+      } catch (e) {
+        /* ignore write failures */
+      }
+    });
+  })();
+</script>

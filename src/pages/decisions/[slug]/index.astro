@@ -1,7 +1,7 @@
 ---
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import DecisionArticle from '../../../components/DecisionArticle.astro';
-import { decisionsBySlug, availableLangs } from '../../../lib/decisions';
+import { decisionsBySlug, availableLangs, slugOf } from '../../../lib/decisions';
 import { DEFAULT_LANG } from '../../../i18n/ui';
 
 export async function getStaticPaths() {
@@ -26,6 +26,7 @@ const { entry, available } = Astro.props;
   lang={DEFAULT_LANG}
   title={entry.data.caseName}
   description={entry.data.holding}
+  decision={{ slug: slugOf(entry), available }}
 >
   <DecisionArticle entry={entry} available={available} />
 </BaseLayout>

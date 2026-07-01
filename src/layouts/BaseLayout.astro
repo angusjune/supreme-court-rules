@@ -1,6 +1,7 @@
 ---
 import '../styles/global.css';
 import Nav from '../components/Nav.astro';
+import LangMemory from '../components/LangMemory.astro';
 import { DEFAULT_LANG, t, type Lang } from '../i18n/ui';
 
 interface Props {
@@ -9,6 +10,8 @@ interface Props {
   lang?: Lang;
   activeTab?: 'decisions' | 'justices';
   wide?: boolean;
+  /** Set on decision detail pages to enable localStorage language memory. */
+  decision?: { slug: string; available: Lang[] };
 }
 
 const {
@@ -17,6 +20,7 @@ const {
   lang = DEFAULT_LANG,
   activeTab,
   wide = false,
+  decision,
 } = Astro.props;
 
 const s = t(lang);
@@ -34,6 +38,11 @@ const favicon =
     <link rel="icon" href={favicon} />
     <title>{pageTitle}</title>
     {description ? <meta name="description" content={description} /> : null}
+    {
+      decision ? (
+        <LangMemory slug={decision.slug} current={lang} available={decision.available} />
+      ) : null
+    }
   </head>
   <body class="min-h-screen bg-white">
     <Nav lang={lang} activeTab={activeTab} />

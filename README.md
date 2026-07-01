@@ -10,9 +10,9 @@ A static site (Astro 7) with two tabs:
 - **Justices** — profiles of the nine justices: appointment, political lean, and notable
   rulings.
 
-Each **decision detail** page gives the outcome (who won, who lost, the disposition), a
-summary of the Court's opinion, links to primary sources, and — the point of the site —
-an **opinionated editorial** on the ruling. Decision details are available in **English,
+Each **decision detail** page gives the outcome (who won, who lost, the disposition),
+neutral summaries of the majority and (where there is one) the dissent opinions, links to
+primary sources, and — the point of the site — an **opinionated editorial** on the ruling. Decision details are available in **English,
 French, Japanese, and Chinese** via a per-page language switcher.
 
 ## Stack

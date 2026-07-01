@@ -28,9 +28,9 @@ src/data/decisions/trump-v-casa/
   per decision; the language switcher only shows languages that exist.
 - The **structured facts** (date, term, docket, vote, justices, disposition, sources URLs)
   must be identical across the four files. The **translatable fields** (`caseName` if you
-  localize it, `winner`, `loser`, `holding`, `courtOpinionSummary`, `topics`, source
-  `label`s) and the **MDX body** are written natively in each language — translate, don't
-  transliterate.
+  localize it, `winner`, `loser`, `holding`, `courtOpinionSummary`, `dissentSummary`,
+  `topics`, source `label`s) and the **MDX body** are written natively in each language —
+  translate, don't transliterate.
 - ⚠️ **Justice names stay in ENGLISH in every language file.** The fields `majorityAuthor`,
   `joinedBy`, `concurrences`, and `dissentBy` must use the English name (e.g.
   `Justice Brett Kavanaugh`) in `fr`/`ja`/`zh` too — do NOT translate them. The
@@ -58,7 +58,8 @@ src/data/decisions/trump-v-casa/
 | `disposition` | yes | string | canonical key (see below) |
 | `lowerCourt` | no | string | court under review |
 | `holding` | yes | string | one-line plain-language holding |
-| `courtOpinionSummary` | yes | string | one paragraph on the Court's reasoning |
+| `courtOpinionSummary` | yes | string | one neutral paragraph on the **majority's** reasoning |
+| `dissentSummary` | no* | string | one neutral paragraph on the **dissent's** reasoning — *required whenever `dissentBy` is non-empty; omit for a unanimous decision |
 | `topics` | no | string[] | subject tags |
 | `sources` | no | `{label,url}[]` | primary + secondary sources |
 | `featured` | no | boolean | keep prominent regardless of date |
@@ -69,9 +70,37 @@ src/data/decisions/trump-v-casa/
 `affirmed-in-part`, `dismissed`. Unknown keys are humanized as a fallback. To add a new
 disposition label, edit `dispositions` in `src/i18n/ui.ts`.
 
-The **MDX body** is the editorial — an opinionated, named-columnist take. Use Markdown
-headings (`##`) for sections like "What this favors", "The aftermath", "My take".
-Plain Markdown only (no loose raw HTML — the Astro 7 compiler is strict).
+### The two opinion summaries (majority + dissent)
+
+The reasoning is captured in **two neutral fields**, not one: `courtOpinionSummary` is the
+**majority's** opinion and `dissentSummary` is the **dissent's**. The detail page renders
+them as two labelled blocks — "The majority's opinion" and (when present) "The dissent".
+
+- Always write `courtOpinionSummary` — the opinion of the Court / majority.
+- Write `dissentSummary` whenever the case has a dissent (`dissentBy` is non-empty). Omit
+  the field entirely for a unanimous decision.
+- Keep both **neutral and factual** — what each side held and why. The opinionated take
+  belongs in the editorial body below, not in these summaries.
+
+### The editorial — a FIXED section-title harness
+
+The **MDX body** is the editorial — an opinionated, named-columnist take. Its section
+titles are a **fixed harness**: use these exact `##` headings, and use the **same**
+translation every time. (They used to drift — "What this favors" alone had been rendered
+half a dozen different ways in Chinese.) Copy the row for the file's language **verbatim**:
+
+| # | en | fr | ja | zh |
+|---|---|---|---|---|
+| 1 | `What the ruling does` | `Ce que fait la décision` | `この判決の意味` | `这项判决的意义` |
+| 2 | `What this favors` | `Ce que cela favorise` | `何を利するのか` | `它有利于谁` |
+| 3 | `The aftermath` | `Les conséquences` | `その後の影響` | `后续影响` |
+| 4 | `My take` | `Mon avis` | `私見` | `我的看法` |
+
+You may insert **exactly one** optional, freely-titled section for a case-specific angle
+(e.g. "The Bates problem") immediately **after** section 1. That optional heading is the
+only title you write yourself — never rename or re-translate the four fixed titles, and
+keep them in the order above. Plain Markdown only (no loose raw HTML — the Astro 7
+compiler is strict).
 
 ---
 

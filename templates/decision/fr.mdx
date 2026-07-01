@@ -20,9 +20,15 @@ loser: La partie perdante (langage courant)
 disposition: reversed-remanded
 lowerCourt: Cour d'appel des États-Unis pour le Nième circuit
 holding: Énoncé en une phrase, en langage clair, de ce que la Cour a décidé.
+# Le raisonnement de la MAJORITÉ — un paragraphe neutre.
 courtOpinionSummary: >-
-  Un paragraphe résumant le raisonnement de la Cour en termes neutres : la
+  Un paragraphe résumant le raisonnement de la majorité en termes neutres : la
   question juridique, la règle énoncée et l'essentiel de la logique de la majorité.
+# Le raisonnement de la DISSIDENCE — à inclure dès que `dissentBy` n'est pas vide ;
+# supprimer entièrement ce champ pour une décision unanime sans dissidence.
+dissentSummary: >-
+  Un paragraphe sur le raisonnement des dissidents en termes neutres : ce qu'ils
+  auraient jugé et pourquoi.
 topics:
   - Thème un
   - Thème deux
@@ -37,6 +43,12 @@ featured: false
 ## Ce que fait la décision
 
 Une thèse claire et assumée : la décision était-elle juste ou non, et pourquoi cela compte.
+
+## Facultatif : une section propre à l'affaire (renommer ou supprimer)
+
+Le seul titre que vous rédigez vous-même — pour un angle propre à l'affaire. Laissez
+les quatre autres titres exactement tels quels. Supprimez cette section si elle est
+inutile.
 
 ## Ce que cela favorise
 

@@ -10,8 +10,8 @@ import { z } from 'astro/zod';
  *
  * The collection `id` becomes `<slug>/<lang>` (e.g. "trump-v-casa/en").
  * Structured facts are identical across a decision's four files; translatable
- * text (caseName?, winner, loser, holding, courtOpinionSummary, topics) and the
- * MDX body are written natively per language.
+ * text (caseName?, winner, loser, holding, courtOpinionSummary, dissentSummary,
+ * topics) and the MDX body are written natively per language.
  */
 const decisions = defineCollection({
   loader: glob({
@@ -41,7 +41,13 @@ const decisions = defineCollection({
     disposition: z.string(),
     lowerCourt: z.string().optional(),
     holding: z.string(), // one-line plain-language holding
-    courtOpinionSummary: z.string(), // a paragraph on the Court's reasoning
+    // A paragraph on the MAJORITY's reasoning. (Field name kept for back-compat; it
+    // now stands specifically for the majority opinion, paired with `dissentSummary`.)
+    courtOpinionSummary: z.string(),
+    // A paragraph on the DISSENT's reasoning. Include it whenever `dissentBy` is
+    // non-empty; omit for unanimous decisions with no dissent. Optional (not enforced
+    // by a refine) so pre-existing entries without it keep validating.
+    dissentSummary: z.string().optional(),
     topics: z.array(z.string()).default([]),
     sources: z
       .array(z.object({ label: z.string(), url: z.string().url() }))

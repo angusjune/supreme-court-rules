@@ -56,4 +56,9 @@ Node >= 22.12.
 - Chrome/UI labels come from `t(lang)` in `src/i18n/ui.ts` — never hardcode chrome text in
   components or content. `outcomeLean` (conservative|liberal|neutral) drives the feed/title
   dots; `makeLeanResolver` in `src/lib/decisions.ts` maps a justice name → lean by surname.
+- A decision carries TWO neutral reasoning fields: `courtOpinionSummary` (the majority) and
+  the optional `dissentSummary` (the dissent — include it whenever `dissentBy` is non-empty),
+  rendered as "The majority's opinion" / "The dissent". Editorial `##` section titles are a
+  FIXED harness with one blessed translation per language (see `CONTENT.md`) — copy them
+  verbatim; don't re-translate, or the four titles drift across decisions.
 ```

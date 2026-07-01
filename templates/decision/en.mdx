@@ -19,9 +19,15 @@ loser: The losing party (plain language)
 disposition: reversed-remanded
 lowerCourt: U.S. Court of Appeals for the Nth Circuit
 holding: One-sentence plain-language statement of what the Court held.
+# The MAJORITY's reasoning — one neutral paragraph.
 courtOpinionSummary: >-
-  One paragraph summarizing the Court's reasoning in neutral terms — the legal
+  One paragraph summarizing the majority's reasoning in neutral terms — the legal
   question, the rule it announced, and the core of the majority's logic.
+# The DISSENT's reasoning — include whenever `dissentBy` is non-empty; delete this
+# field entirely for a unanimous decision with no dissent.
+dissentSummary: >-
+  One paragraph on the dissent's reasoning in neutral terms — what the dissenters
+  would have held and why.
 topics:
   - Topic One
   - Topic Two
@@ -36,6 +42,12 @@ featured: false
 ## What the ruling does
 
 Open with a clear, opinionated thesis: was this right or wrong, and why it matters.
+
+## Optional: one case-specific section (rename or delete)
+
+The only heading you may write yourself — use it for a case-specific angle (e.g.
+"The Bates problem"). Leave the other four titles exactly as printed. Delete this
+section if you don't need it.
 
 ## What this favors
 

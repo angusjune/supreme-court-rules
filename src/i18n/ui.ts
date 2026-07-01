@@ -42,7 +42,8 @@ type UIKey =
   | 'dissent'
   | 'lowerCourt'
   | 'held'
-  | 'courtOpinion'
+  | 'majorityOpinion'
+  | 'dissentOpinion'
   | 'editorial'
   | 'editorialNote'
   | 'sources'
@@ -84,7 +85,8 @@ export const ui: Record<Lang, Record<UIKey, string>> = {
     dissent: 'Dissent',
     lowerCourt: 'On review from',
     held: 'Held',
-    courtOpinion: "The Court's opinion",
+    majorityOpinion: "The majority's opinion",
+    dissentOpinion: 'The dissent',
     editorial: 'Editorial',
     editorialNote: 'Opinion — my take on the ruling',
     sources: 'Sources',
@@ -125,7 +127,8 @@ export const ui: Record<Lang, Record<UIKey, string>> = {
     dissent: 'Opinion dissidente',
     lowerCourt: 'En appel de',
     held: 'Décision',
-    courtOpinion: "L'opinion de la Cour",
+    majorityOpinion: "L'opinion majoritaire",
+    dissentOpinion: "L'opinion dissidente",
     editorial: 'Éditorial',
     editorialNote: 'Opinion — mon analyse de la décision',
     sources: 'Sources',
@@ -166,7 +169,8 @@ export const ui: Record<Lang, Record<UIKey, string>> = {
     dissent: '反対意見',
     lowerCourt: '原審',
     held: '判示事項',
-    courtOpinion: '法廷意見の要旨',
+    majorityOpinion: '多数意見の要旨',
+    dissentOpinion: '反対意見の要旨',
     editorial: '論説',
     editorialNote: '論説 — 判決についての私見',
     sources: '出典',
@@ -206,7 +210,8 @@ export const ui: Record<Lang, Record<UIKey, string>> = {
     dissent: '异议',
     lowerCourt: '下级法院',
     held: '判旨',
-    courtOpinion: '法院意见摘要',
+    majorityOpinion: '多数意见摘要',
+    dissentOpinion: '异议摘要',
     editorial: '社论',
     editorialNote: '观点 —— 我对本判决的评论',
     sources: '来源',

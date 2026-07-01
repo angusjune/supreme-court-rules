@@ -133,14 +133,26 @@ const toItems = (names: string[]) =>
     </div>
   </section>
 
-  {/* The Court's opinion */}
+  {/* The opinions — the majority, then the dissent (when there is one) */}
   <section class="mt-8">
     <h2 class="text-sm font-semibold uppercase tracking-wide text-faint">
-      {s.courtOpinion}
+      {s.majorityOpinion}
     </h2>
     <p class="mt-2 text-base leading-relaxed text-ink">
       {d.courtOpinionSummary}
     </p>
+    {
+      d.dissentSummary ? (
+        <Fragment>
+          <h2 class="mt-6 text-sm font-semibold uppercase tracking-wide text-faint">
+            {s.dissentOpinion}
+          </h2>
+          <p class="mt-2 text-base leading-relaxed text-ink">
+            {d.dissentSummary}
+          </p>
+        </Fragment>
+      ) : null
+    }
     <dl class="mt-4 flex flex-col gap-2 text-sm">
       <div class="flex gap-2">
         <dt class="w-28 shrink-0 pt-0.5 text-faint">{s.majority}</dt>

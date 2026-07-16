@@ -62,11 +62,15 @@ is four MDX files, one per language).
 
 ## Deploy
 
-Static output. Deploy `dist/` anywhere; Vercel and Netlify auto-detect Astro.
+Static output (`dist/`), deployed on **Netlify**, which builds on every push to `main`.
 
-**The site must rebuild every day**, not just when content changes. "Today" is baked in at
-build time, so on a day the Court issues nothing there is no commit, no rebuild, and the
-feed keeps showing a stale date. `.github/workflows/daily-rebuild.yml` POSTs a build hook
-just after midnight Eastern; add the URL as a `DEPLOY_HOOK_URL` repo secret (Netlify: Site
-configuration → Build & deploy → Build hooks; Vercel: Settings → Git → Deploy Hooks;
-Cloudflare Pages: Settings → Builds & deployments → Deploy hooks).
+**The site must also rebuild every day**, not just when content changes. "Today" is baked
+in at build time, so on a day the Court issues nothing there is no commit, no rebuild, and
+the feed keeps showing a stale date. `.github/workflows/daily-rebuild.yml` POSTs a Netlify
+build hook just after midnight Eastern. Create the hook under Project configuration →
+Build & deploy → Continuous deployment → Build hooks (branch: `main`) and add its URL as a
+`DEPLOY_HOOK_URL` repo secret:
+
+```bash
+gh secret set DEPLOY_HOOK_URL --repo angusjune/supreme-court-rules   # paste when prompted
+```

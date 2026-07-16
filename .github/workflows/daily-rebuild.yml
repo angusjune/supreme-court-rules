@@ -6,9 +6,8 @@ name: Daily rebuild
 # announcing a stale date — and worse, keeps the last decision pinned as "Today's
 # Decision". This rebuilds every day regardless of whether anything changed.
 #
-# Requires a DEPLOY_HOOK_URL repo secret: a build hook from the host (Netlify: Site
-# configuration -> Build & deploy -> Build hooks; Vercel: Settings -> Git -> Deploy
-# Hooks; Cloudflare Pages: Settings -> Builds & deployments -> Deploy hooks).
+# Requires a DEPLOY_HOOK_URL repo secret: the Netlify build hook for this site, from
+# Project configuration -> Build & deploy -> Continuous deployment -> Build hooks.
 #
 # NOTE: this repo is public, and GitHub disables scheduled workflows after 60 days with
 # no repository activity. A Supreme Court summer recess is longer than that, so this
@@ -27,7 +26,7 @@ jobs:
   rebuild:
     runs-on: ubuntu-latest
     steps:
-      - name: Trigger a deploy
+      - name: Trigger a Netlify deploy
         env:
           DEPLOY_HOOK_URL: ${{ secrets.DEPLOY_HOOK_URL }}
         run: |
@@ -35,6 +34,13 @@ jobs:
             echo "::error::DEPLOY_HOOK_URL secret is not set — no deploy was triggered."
             exit 1
           fi
+          # trigger_title labels the deploy in Netlify's list, so a date-only rebuild is
+          # distinguishable from a content push at a glance.
+          case "$DEPLOY_HOOK_URL" in
+            *\?*) sep='&' ;;
+            *) sep='?' ;;
+          esac
           curl --fail --silent --show-error --location \
-            --request POST "$DEPLOY_HOOK_URL"
+            -X POST -d '{}' \
+            "${DEPLOY_HOOK_URL}${sep}trigger_title=Daily+scheduled+rebuild"
           echo "Deploy hook fired."

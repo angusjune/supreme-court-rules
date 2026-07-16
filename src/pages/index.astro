@@ -4,14 +4,16 @@ import HeroDecision from '../components/HeroDecision.astro';
 import DecisionListItem from '../components/DecisionListItem.astro';
 import EmptyState from '../components/EmptyState.astro';
 import { DEFAULT_LANG, t } from '../i18n/ui';
-import { decisionFeed, decisionsOn, formatDate } from '../lib/decisions';
+import { courtToday, decisionFeed, decisionsOn, formatDay } from '../lib/decisions';
 
 const lang = DEFAULT_LANG;
 const s = t(lang);
 
 const feed = await decisionFeed(); // one en entry per decision, newest first
-const today = new Date(); // build date == "today" for this static build
-const todayLabel = formatDate(today, lang);
+// "Today" is the Court's day AT BUILD TIME, so this page is only as fresh as its
+// last build — see the daily rebuild in .github/workflows/daily-rebuild.yml.
+const today = courtToday();
+const todayLabel = formatDay(today, lang);
 const todays = decisionsOn(feed, today);
 const todaysSlugs = new Set(todays.map((e) => e.data.slug));
 const past = feed.filter((e) => !todaysSlugs.has(e.data.slug));

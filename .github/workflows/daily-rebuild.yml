@@ -1,0 +1,40 @@
+name: Daily rebuild
+
+# The feed bakes in "today" at build time (src/pages/index.astro), so the site is only
+# as fresh as its last build. Content pushes alone are not enough: on a day the Court
+# issues nothing there is no commit, nothing rebuilds, and the front page goes on
+# announcing a stale date — and worse, keeps the last decision pinned as "Today's
+# Decision". This rebuilds every day regardless of whether anything changed.
+#
+# Requires a DEPLOY_HOOK_URL repo secret: a build hook from the host (Netlify: Site
+# configuration -> Build & deploy -> Build hooks; Vercel: Settings -> Git -> Deploy
+# Hooks; Cloudflare Pages: Settings -> Builds & deployments -> Deploy hooks).
+#
+# NOTE: this repo is public, and GitHub disables scheduled workflows after 60 days with
+# no repository activity. A Supreme Court summer recess is longer than that, so this
+# cron can go dormant exactly when it matters most. Treat it as a backstop; the daily
+# Claude Routine should POST the same hook as its last step, since it runs every day
+# off GitHub's infrastructure. GitHub emails before disabling, and Actions -> Daily
+# rebuild -> "Enable workflow" brings it back.
+
+on:
+  schedule:
+    # 05:10 UTC = 00:10 EST / 01:10 EDT — just past midnight at the Court, year-round.
+    - cron: '10 5 * * *'
+  workflow_dispatch:
+
+jobs:
+  rebuild:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger a deploy
+        env:
+          DEPLOY_HOOK_URL: ${{ secrets.DEPLOY_HOOK_URL }}
+        run: |
+          if [ -z "$DEPLOY_HOOK_URL" ]; then
+            echo "::error::DEPLOY_HOOK_URL secret is not set — no deploy was triggered."
+            exit 1
+          fi
+          curl --fail --silent --show-error --location \
+            --request POST "$DEPLOY_HOOK_URL"
+          echo "Deploy hook fired."

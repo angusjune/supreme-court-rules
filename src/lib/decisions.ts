@@ -46,20 +46,54 @@ const LOCALE: Record<Lang, string> = {
   zh: 'zh-CN',
 };
 
-/** YYYY-MM-DD in local time, for stable same-day comparison. */
-export function ymd(date: Date): string {
-  const y = date.getFullYear();
-  const m = String(date.getMonth() + 1).padStart(2, '0');
-  const d = String(date.getDate()).padStart(2, '0');
-  return `${y}-${m}-${d}`;
+/** The Court sits in Washington, DC — its calendar day is Eastern, not the builder's. */
+export const COURT_TZ = 'America/New_York';
+
+/** A civil date ("YYYY-MM-DD"): a day on a calendar, with no time or zone of its own. */
+export type Day = string;
+
+/** The calendar day an instant falls on, in `timeZone`. */
+function civilDate(instant: Date, timeZone: string): Day {
+  const parts = new Intl.DateTimeFormat('en-US', {
+    timeZone,
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  }).formatToParts(instant);
+  const get = (type: string) => parts.find((p) => p.type === type)?.value ?? '';
+  return `${get('year')}-${get('month')}-${get('day')}`;
 }
 
-export function formatDate(date: Date, lang: Lang): string {
+/**
+ * The Court's calendar day right now. Pinned to Eastern: a build running at 02:00
+ * UTC is still on the previous day at the Court, and must not advance the feed.
+ */
+export function courtToday(now: Date = new Date()): Day {
+  return civilDate(now, COURT_TZ);
+}
+
+/**
+ * The calendar day of a frontmatter date. `z.coerce.date()` turns `2026-06-30` into
+ * UTC midnight, which is an instant, not a day — read it back in UTC or a builder
+ * west of Greenwich sees June 29.
+ */
+export function dayOf(date: Date): Day {
+  return civilDate(date, 'UTC');
+}
+
+export function formatDay(day: Day, lang: Lang): string {
+  const [y, m, d] = day.split('-').map(Number);
   return new Intl.DateTimeFormat(LOCALE[lang] ?? LOCALE.en, {
+    timeZone: 'UTC',
     year: 'numeric',
     month: 'long',
     day: 'numeric',
-  }).format(date);
+  }).format(new Date(Date.UTC(y, m - 1, d)));
+}
+
+/** Display a frontmatter date (a calendar day) in `lang`. */
+export function formatDate(date: Date, lang: Lang): string {
+  return formatDay(dayOf(date), lang);
 }
 
 /** The decision slug for an entry (id is "<slug>/<lang>"). */
@@ -100,8 +134,7 @@ export function availableLangs(entries: DecisionEntry[]): Lang[] {
   return order.filter((l) => present.has(l));
 }
 
-/** Decisions whose date matches the given build date (the "today" set). */
-export function decisionsOn(entries: DecisionEntry[], today: Date): DecisionEntry[] {
-  const key = ymd(today);
-  return entries.filter((e) => ymd(e.data.date) === key);
+/** The decisions issued on a given calendar day (the "today" set). */
+export function decisionsOn(entries: DecisionEntry[], day: Day): DecisionEntry[] {
+  return entries.filter((e) => dayOf(e.data.date) === day);
 }

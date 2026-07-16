@@ -63,3 +63,10 @@ is four MDX files, one per language).
 ## Deploy
 
 Static output. Deploy `dist/` anywhere; Vercel and Netlify auto-detect Astro.
+
+**The site must rebuild every day**, not just when content changes. "Today" is baked in at
+build time, so on a day the Court issues nothing there is no commit, no rebuild, and the
+feed keeps showing a stale date. `.github/workflows/daily-rebuild.yml` POSTs a build hook
+just after midnight Eastern; add the URL as a `DEPLOY_HOOK_URL` repo secret (Netlify: Site
+configuration → Build & deploy → Build hooks; Vercel: Settings → Git → Deploy Hooks;
+Cloudflare Pages: Settings → Builds & deployments → Deploy hooks).

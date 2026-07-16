@@ -3,9 +3,17 @@
 This site is fully static. To update it, add or edit MDX files under `src/data/` and
 rebuild (`npm run build`). No database, no API calls at runtime.
 
-The site treats a decision as **"today's"** when its `date` equals the build date, so the
-routine should run on the day of (or set `date` to the day you want it featured) and then
-rebuild + redeploy.
+The site treats a decision as **"today's"** when its `date` equals the build day **in
+Eastern time** (the Court's own day — not the build machine's zone), so the routine should
+run on the day of (or set `date` to the day you want it featured) and then rebuild +
+redeploy.
+
+**On a no-decision day the routine must still trigger a redeploy.** "Today" is baked in at
+build time, so a day with no commit means no rebuild, and the front page keeps showing a
+stale date — or, if the last push was itself a decision day, keeps that decision pinned as
+"Today's Decision" indefinitely. POST the host's deploy hook as the routine's last step,
+every day, even when there is nothing to commit.
+See `.github/workflows/daily-rebuild.yml`.
 
 ---
 

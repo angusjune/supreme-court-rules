@@ -42,8 +42,16 @@ Node >= 22.12.
   `concurrences`, `dissentBy`). The political-lean dots match English surnames, so a
   localized name loses its dot. `DecisionArticle.astro` re-sources these from the English
   sibling entry as a safety net — keep the data clean anyway.
-- **"Today" is computed at build time** (`new Date()` in `src/pages/index.astro`), so the
-  site must be rebuilt daily for the "No decisions today" state to advance.
+- **"Today" is computed at build time**, so the site MUST be rebuilt daily — a no-decision
+  day produces no commit, and without a rebuild the feed keeps announcing a stale date and
+  pins the last decision as "Today's Decision" forever. `.github/workflows/daily-rebuild.yml`
+  fires the host's deploy hook on a cron; the daily routine should fire it too (GitHub
+  disables cron workflows after 60 days of repo inactivity, and the summer recess is longer).
+- **Dates are calendar days, not instants.** `date: 2026-06-30` is coerced to UTC midnight,
+  so reading it back with local getters shows June 29 on any builder west of Greenwich.
+  Go through `dayOf()` / `courtToday()` / `formatDay()` in `src/lib/decisions.ts` (which pin
+  frontmatter dates to UTC and "now" to `America/New_York`) — never compare `Date` objects
+  or call `new Date()` for "today".
 - **Tailwind v4 `@theme` tokens auto-generate utilities.** `--color-*` in
   `src/styles/global.css` creates `text-*`/`bg-*`/`border-*` classes; avoid names that
   collide with Tailwind's own utilities (the lean color is `centrist`, not `center`, which

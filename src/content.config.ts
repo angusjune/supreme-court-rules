@@ -26,7 +26,7 @@ const decisions = defineCollection({
     slug: z.string(), // shared decision key, identical across the language files
     lang: z.enum(['en', 'fr', 'ja', 'zh']),
     caseName: z.string(),
-    date: z.coerce.date(), // decision date — drives the "today" logic
+    date: z.coerce.date(), // decision date — orders the feed (newest first)
     term: z.string().optional(), // e.g. "2024" (OT2024)
     docket: z.string().optional(),
     vote: z.string(), // e.g. "6-3"

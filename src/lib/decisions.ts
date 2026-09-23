@@ -46,9 +46,6 @@ const LOCALE: Record<Lang, string> = {
   zh: 'zh-CN',
 };
 
-/** The Court sits in Washington, DC — its calendar day is Eastern, not the builder's. */
-export const COURT_TZ = 'America/New_York';
-
 /** A civil date ("YYYY-MM-DD"): a day on a calendar, with no time or zone of its own. */
 export type Day = string;
 
@@ -62,14 +59,6 @@ function civilDate(instant: Date, timeZone: string): Day {
   }).formatToParts(instant);
   const get = (type: string) => parts.find((p) => p.type === type)?.value ?? '';
   return `${get('year')}-${get('month')}-${get('day')}`;
-}
-
-/**
- * The Court's calendar day right now. Pinned to Eastern: a build running at 02:00
- * UTC is still on the previous day at the Court, and must not advance the feed.
- */
-export function courtToday(now: Date = new Date()): Day {
-  return civilDate(now, COURT_TZ);
 }
 
 /**
@@ -132,9 +121,4 @@ export function availableLangs(entries: DecisionEntry[]): Lang[] {
   const order: Lang[] = ['en', 'fr', 'ja', 'zh'];
   const present = new Set(entries.map((e) => e.data.lang));
   return order.filter((l) => present.has(l));
-}
-
-/** The decisions issued on a given calendar day (the "today" set). */
-export function decisionsOn(entries: DecisionEntry[], day: Day): DecisionEntry[] {
-  return entries.filter((e) => dayOf(e.data.date) === day);
 }

@@ -1,9 +1,9 @@
 # CLAUDE.md
 
-"Supreme Court Today" — a static **Astro 7** site (two tabs: Decisions feed + Justices)
-answering "What did the US Supreme Court rule today?". Decision details are multilingual
-(en/fr/ja/zh); the feed and Justices are English-only. Content is updated daily by a Claude
-Routine that commits to `main`.
+"Supreme Court Rules" — a static **Astro 7** site (two tabs: Decisions feed + Justices)
+covering how the US Supreme Court rules; the feed features the latest decision. Decision
+details are multilingual (en/fr/ja/zh); the feed and Justices are English-only. Content is
+updated by a Claude Routine that commits to `main`.
 
 See `README.md` (overview/layout) and `CONTENT.md` (content schema + how to add
 decisions/editorials) — keep both current when the model changes.
@@ -42,16 +42,10 @@ Node >= 22.12.
   `concurrences`, `dissentBy`). The political-lean dots match English surnames, so a
   localized name loses its dot. `DecisionArticle.astro` re-sources these from the English
   sibling entry as a safety net — keep the data clean anyway.
-- **"Today" is computed at build time**, so the site MUST be rebuilt daily — a no-decision
-  day produces no commit, and without a rebuild the feed keeps announcing a stale date and
-  pins the last decision as "Today's Decision" forever. `.github/workflows/daily-rebuild.yml`
-  fires the host's deploy hook on a cron; the daily routine should fire it too (GitHub
-  disables cron workflows after 60 days of repo inactivity, and the summer recess is longer).
 - **Dates are calendar days, not instants.** `date: 2026-06-30` is coerced to UTC midnight,
   so reading it back with local getters shows June 29 on any builder west of Greenwich.
-  Go through `dayOf()` / `courtToday()` / `formatDay()` in `src/lib/decisions.ts` (which pin
-  frontmatter dates to UTC and "now" to `America/New_York`) — never compare `Date` objects
-  or call `new Date()` for "today".
+  Go through `dayOf()` / `formatDate()` / `formatDay()` in `src/lib/decisions.ts` (which pin
+  frontmatter dates to UTC).
 - **Tailwind v4 `@theme` tokens auto-generate utilities.** `--color-*` in
   `src/styles/global.css` creates `text-*`/`bg-*`/`border-*` classes; avoid names that
   collide with Tailwind's own utilities (the lean color is `centrist`, not `center`, which

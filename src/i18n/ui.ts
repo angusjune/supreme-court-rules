@@ -20,10 +20,8 @@ type UIKey =
   | 'tagline'
   | 'navDecisions'
   | 'navJustices'
-  | 'today'
-  | 'todaysDecision'
-  | 'noDecisionsToday'
-  | 'noDecisionsBlurb'
+  | 'latestDecision'
+  | 'noDecisions'
   | 'recentDecisions'
   | 'allDecisions'
   | 'readEditorial'
@@ -58,15 +56,12 @@ type UIKey =
 
 export const ui: Record<Lang, Record<UIKey, string>> = {
   en: {
-    siteTitle: 'Supreme Court Today',
-    tagline: 'What did the US Supreme Court rule today?',
+    siteTitle: 'Supreme Court Rules',
+    tagline: 'How the US Supreme Court rules — decisions, explained.',
     navDecisions: 'Decisions',
     navJustices: 'Justices',
-    today: 'Today',
-    todaysDecision: "Today's Decision",
-    noDecisionsToday: 'No decisions today',
-    noDecisionsBlurb:
-      'The Court issued no opinions today. Browse recent decisions below.',
+    latestDecision: 'Latest Decision',
+    noDecisions: 'No decisions yet',
     recentDecisions: 'Recent Decisions',
     allDecisions: 'All Decisions',
     readEditorial: 'Read the editorial',
@@ -100,15 +95,12 @@ export const ui: Record<Lang, Record<UIKey, string>> = {
     winNeutral: 'Neutral outcome',
   },
   fr: {
-    siteTitle: 'La Cour suprême aujourd’hui',
-    tagline: "Qu'a décidé la Cour suprême des États-Unis aujourd'hui ?",
+    siteTitle: 'Les décisions de la Cour suprême',
+    tagline: 'Comment tranche la Cour suprême des États-Unis — les décisions expliquées.',
     navDecisions: 'Décisions',
     navJustices: 'Juges',
-    today: "Aujourd'hui",
-    todaysDecision: "La décision du jour",
-    noDecisionsToday: "Aucune décision aujourd'hui",
-    noDecisionsBlurb:
-      "La Cour n'a rendu aucune opinion aujourd'hui. Consultez les décisions récentes ci-dessous.",
+    latestDecision: 'Dernière décision',
+    noDecisions: 'Aucune décision pour le moment',
     recentDecisions: 'Décisions récentes',
     allDecisions: 'Toutes les décisions',
     readEditorial: "Lire l'éditorial",
@@ -142,15 +134,12 @@ export const ui: Record<Lang, Record<UIKey, string>> = {
     winNeutral: 'Résultat neutre',
   },
   ja: {
-    siteTitle: '連邦最高裁 今日の判決',
-    tagline: '合衆国最高裁は今日どのような判決を下したのか？',
+    siteTitle: '連邦最高裁の判決',
+    tagline: '合衆国最高裁はどう判断したのか — 判決を解説。',
     navDecisions: '判決',
     navJustices: '裁判官',
-    today: '本日',
-    todaysDecision: '本日の判決',
-    noDecisionsToday: '本日の判決はありません',
-    noDecisionsBlurb:
-      '最高裁は本日、意見を公表しませんでした。以下で最近の判決をご覧ください。',
+    latestDecision: '最新の判決',
+    noDecisions: '判決はまだありません',
     recentDecisions: '最近の判決',
     allDecisions: 'すべての判決',
     readEditorial: '論説を読む',
@@ -184,14 +173,12 @@ export const ui: Record<Lang, Record<UIKey, string>> = {
     winNeutral: '中立的な結果',
   },
   zh: {
-    siteTitle: '最高法院今日判决',
-    tagline: '美国最高法院今天作出了什么判决？',
+    siteTitle: '美国最高法院判决',
+    tagline: '美国最高法院如何判决——判决解读。',
     navDecisions: '判决',
     navJustices: '大法官',
-    today: '今日',
-    todaysDecision: '今日判决',
-    noDecisionsToday: '今天没有判决',
-    noDecisionsBlurb: '最高法院今天没有发布任何意见。请在下方浏览近期判决。',
+    latestDecision: '最新判决',
+    noDecisions: '暂无判决',
     recentDecisions: '近期判决',
     allDecisions: '全部判决',
     readEditorial: '阅读社论',

@@ -1,12 +1,12 @@
-# Supreme Court Today
+# Supreme Court Rules
 
-> What did the US Supreme Court rule today?
+> How the US Supreme Court rules — decisions, explained.
 
 A static site (Astro 7) with two tabs:
 
-- **Decisions** — a feed of Supreme Court decisions. Today's decision is featured
-  prominently with full facts and an editorial excerpt; older decisions appear as a
-  compact list. If the Court issued nothing today, the feed shows **"No decisions today."**
+- **Decisions** — a feed of Supreme Court decisions, newest first. The latest decision is
+  featured prominently with full facts and an editorial excerpt; older decisions appear as
+  a compact list.
 - **Justices** — profiles of the nine justices: appointment, political lean, and notable
   rulings.
 
@@ -63,14 +63,3 @@ is four MDX files, one per language).
 ## Deploy
 
 Static output (`dist/`), deployed on **Netlify**, which builds on every push to `main`.
-
-**The site must also rebuild every day**, not just when content changes. "Today" is baked
-in at build time, so on a day the Court issues nothing there is no commit, no rebuild, and
-the feed keeps showing a stale date. `.github/workflows/daily-rebuild.yml` POSTs a Netlify
-build hook just after midnight Eastern. Create the hook under Project configuration →
-Build & deploy → Continuous deployment → Build hooks (branch: `main`) and add its URL as a
-`DEPLOY_HOOK_URL` repo secret:
-
-```bash
-gh secret set DEPLOY_HOOK_URL --repo angusjune/supreme-court-rules   # paste when prompted
-```

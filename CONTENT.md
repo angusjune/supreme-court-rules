@@ -3,17 +3,8 @@
 This site is fully static. To update it, add or edit MDX files under `src/data/` and
 rebuild (`npm run build`). No database, no API calls at runtime.
 
-The site treats a decision as **"today's"** when its `date` equals the build day **in
-Eastern time** (the Court's own day — not the build machine's zone), so the routine should
-run on the day of (or set `date` to the day you want it featured) and then rebuild +
-redeploy.
-
-**On a no-decision day the routine must still trigger a redeploy.** "Today" is baked in at
-build time, so a day with no commit means no rebuild, and the front page keeps showing a
-stale date — or, if the last push was itself a decision day, keeps that decision pinned as
-"Today's Decision" indefinitely. POST the host's deploy hook as the routine's last step,
-every day, even when there is nothing to commit.
-See `.github/workflows/daily-rebuild.yml`.
+The homepage features the most recent decision (by `date`) and lists the rest below it,
+newest first. Pushing to `main` triggers a rebuild; no scheduled rebuild is needed.
 
 ---
 
@@ -53,7 +44,7 @@ src/data/decisions/trump-v-casa/
 | `slug` | yes | string | identical across the 4 files; equals the folder name |
 | `lang` | yes | `en`\|`fr`\|`ja`\|`zh` | the file's language |
 | `caseName` | yes | string | e.g. `Trump v. CASA, Inc.` |
-| `date` | yes | date | `YYYY-MM-DD`; drives the "today" logic |
+| `date` | yes | date | `YYYY-MM-DD`; orders the feed (newest first) |
 | `term` | no | string | e.g. `"2024"` (OT2024) |
 | `docket` | no | string | e.g. `24-000` |
 | `vote` | yes | string | e.g. `6-3` |
